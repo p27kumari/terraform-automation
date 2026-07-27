@@ -13,12 +13,17 @@ on:
           - plan
           - apply
           - destroy
+      bootstrap:
+        description: 'Run bootstrap job to create backend resources'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   bootstrap:
     name: Bootstrap backend resources
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.action != 'validate' }}
+    if: ${{ github.event.inputs.bootstrap == 'true' }}
     permissions:
       contents: read
       id-token: write
