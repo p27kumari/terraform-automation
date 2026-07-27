@@ -39,19 +39,19 @@ jobs:
 
       - name: Terraform init
         run: terraform init
-        working-directory: ./terraform-scripting
+        working-directory: .
 
       - name: Terraform validate
         if: ${{ inputs.action == 'validate' || inputs.action == 'apply' }}
         run: terraform validate
-        working-directory: ./terraform-scripting
+        working-directory: .
 
       - name: Terraform plan
         if: ${{ inputs.action == 'plan' || inputs.action == 'apply' }}
         run: terraform plan -var="bucket_name=${{ vars.TF_BUCKET_NAME || 'my-terraform-practice-bucket' }}" -out=tfplan
-        working-directory: ./terraform-scripting
+        working-directory: .
 
       - name: Terraform apply
         if: ${{ inputs.action == 'apply' }}
         run: terraform apply -auto-approve tfplan
-        working-directory: ./terraform-scripting
+        working-directory: .
