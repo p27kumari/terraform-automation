@@ -1,8 +1,8 @@
 terraform {
   backend "s3" {
-    bucket         = "Pihu-my-terraform-state-bucket-12345"
+    bucket         = "pihu-bucket-for-state-management"
     key            = "terraform/terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "terraform-locks"
+    dynamodb_table = "terraform-db"
   }
 }
