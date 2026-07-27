@@ -64,3 +64,33 @@ terraform init \
 
 Quick CI note: In GitHub Actions pass the same `-backend-config` values during the `terraform init` step (you can use `secrets` to store the bucket and table names).
 
+### Bootstrap resources
+
+This repository includes a `bootstrap` Terraform module that can create the S3 bucket and DynamoDB table used for the remote backend.
+
+1. Change into the bootstrap folder and review `bootstrap/variables.tf` to set your desired names (the defaults match `backend.tf`):
+
+```bash
+cd bootstrap
+notepad variables.tf  # or use your editor
+```
+
+2. Initialize and apply the bootstrap to create the bucket and table:
+
+```bash
+terraform init
+terraform apply -var="bucket_name=your-unique-bucket-name" -auto-approve
+```
+
+3. After the bucket and table exist, return to the root and run `terraform init` to initialize the S3 backend (it should detect the bucket):
+
+```bash
+cd ..
+terraform init
+```
+
+Notes:
+- The S3 bucket name must be globally unique and DNS-compliant (lowercase, hyphens, 3-63 chars).
+- If you plan to run bootstrap in GitHub Actions, ensure the Action has AWS credentials and that the workflow runs the bootstrap apply before initializing the main workspace.
+
+
