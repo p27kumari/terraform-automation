@@ -1,25 +1,21 @@
 name: Terraform CI/CD
 
 on:
-  # push:
-  #   branches:
-  #     - main
-  #     - master
-  # pull_request:
-  #   branches:
-  #     - main
-  #     - master
   workflow_dispatch:
     inputs:
-      apply:
-        description: 'Apply the Terraform changes'
-        required: false
-        default: false
-        type: boolean
+      action:
+        description: 'Choose the Terraform action to run'
+        required: true
+        default: plan
+        type: choice
+        options:
+          - validate
+          - plan
+          - apply
 
 jobs:
   terraform:
-    name: Terraform Plan and Apply
+    name: Terraform action
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -45,11 +41,17 @@ jobs:
         run: terraform init
         working-directory: ./terraform-scripting
 
+      - name: Terraform validate
+        if: ${{ inputs.action == 'validate' || inputs.action == 'apply' }}
+        run: terraform validate
+        working-directory: ./terraform-scripting
+
       - name: Terraform plan
+        if: ${{ inputs.action == 'plan' || inputs.action == 'apply' }}
         run: terraform plan -var="bucket_name=${{ vars.TF_BUCKET_NAME || 'my-terraform-practice-bucket' }}" -out=tfplan
         working-directory: ./terraform-scripting
 
       - name: Terraform apply
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.apply == true }}
+        if: ${{ inputs.action == 'apply' }}
         run: terraform apply -auto-approve tfplan
         working-directory: ./terraform-scripting
