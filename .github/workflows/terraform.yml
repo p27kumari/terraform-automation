@@ -12,6 +12,7 @@ on:
           - validate
           - plan
           - apply
+          - destroy
 
 jobs:
   terraform:
@@ -48,10 +49,15 @@ jobs:
 
       - name: Terraform plan
         if: ${{ inputs.action == 'plan' || inputs.action == 'apply' }}
-        run: terraform plan -var="bucket_name=${{ vars.TF_BUCKET_NAME || 'my-terraform-practice-bucket' }}" -out=tfplan
+        run: terraform plan -var-file=terraform.tfvars -out=tfplan
         working-directory: .
 
       - name: Terraform apply
         if: ${{ inputs.action == 'apply' }}
         run: terraform apply -auto-approve tfplan
+        working-directory: .
+
+      - name: Terraform destroy
+        if: ${{ inputs.action == 'destroy' }}
+        run: terraform destroy -auto-approve
         working-directory: .
