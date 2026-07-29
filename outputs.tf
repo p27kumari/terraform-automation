@@ -1,15 +1,11 @@
 output "bucket_name" {
-  value = aws_s3_bucket.demo_bucket.bucket
+  value = module.storage.bucket_name
+}
+
+output "bucket_id" {
+  value = module.storage.bucket_id
 }
 
 output "bucket_arn" {
-  value = aws_s3_bucket.demo_bucket.arn
-}
-
-output "meera_bucket_name" {
-  value = aws_s3_bucket.meera_bucket.id
-}
-
-output "meera_bucket_arn" {
-  value = aws_s3_bucket.meera_bucket.arn
+  value = module.storage.bucket_arn
 }
